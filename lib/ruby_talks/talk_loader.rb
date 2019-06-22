@@ -6,57 +6,10 @@ require 'open-uri'
 
 module RubyTalks
   class TalkLoader
-    DEFAULT_MAPPING = {
-      title: {
-        name: 'title',
-        css: '.presentation-content__title',
-        text_nodes: true,
-        value: 'content'
-      },
-      announce: {
-        name: 'announce',
-        css: '.presentation-content__description',
-        text_nodes: true,
-        value: 'content'
-      },
-      slides_url: {
-        name: 'slides_url',
-        css: '.presentation-materials__list',
-        search: 'a',
-        fetch: -1,
-        attr: 'href'
-      },
-      video_url: {
-        name: 'video_url',
-        css: '.presentation-video__link',
-        search: 'a',
-        fetch: -1,
-        attr: 'href'
-      },
-      speaker: {
-        name: 'speaker',
-        css: '.speaker__name',
-        text_nodes: true,
-        value: 'content'
-      },
-      speaker_bio: {
-        name: 'speaker_bio',
-        css: '.speaker__bio',
-        text_nodes: true,
-        value: 'content'
-      },
-      speaker_photo_url: {
-        name: 'speaker_photo_url',
-        css: '.speaker__img',
-        search: 'img',
-        fetch: -1,
-        attr: 'src'
-      }
-    }.freeze
 
-    def initialize(base_url:, css_mapping: DEFAULT_MAPPING, url_marker: 'presentation')
+    def initialize(base_url:, mapping_path:, url_marker: 'presentation')
       @base_url = base_url
-      @css_mapping = css_mapping
+      @css_mapping = YAML.load(File.read(mapping_path))
       @root_doc = Nokogiri::HTML(open(@base_url))
       @url_marker = url_marker
     end
